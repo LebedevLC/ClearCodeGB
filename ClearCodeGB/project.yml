@@ -1,0 +1,50 @@
+name: GreenScreen
+
+configs:
+  App-Store: release
+  Debug: debug
+
+options:
+  bundleIdPrefix: com.whiteAndFluffy
+  deploymentTarget: 14.0
+  groupSortPosition: top
+  developmentLanguage: ru
+  createIntermediateGroups: true
+
+targets:
+  GreenScreen:
+    type: application
+    platform: iOS
+    deploymentTarget: 14.0
+    settings:
+      base:
+        MARKETING_VERSION: 1.0
+        CURRENT_PROJECT_VERSION: 1
+    sources:
+       - path: GreenScreen
+    preBuildScripts:
+      - script: |
+            "${PODS_ROOT}/SwiftLint/swiftlint"
+        name: SwiftLint
+      - script: |
+            "$PODS_ROOT/R.swift/rswift" generate "$SRCROOT/$TARGET_NAME/Sources/Generated/R.generated.swift"
+        name: "R.Swift"
+        basedOnDependencyAnalysis: false
+        inputFiles:
+          - $TEMP_DIR/rswift-lastrun
+        outputFiles:
+          - $SRCROOT/$TARGET_NAME/Sources/Generated/R.generated.swift
+
+schemes:
+  App-Store:
+    build:
+      targets:
+        GreenScreen: all
+    run:
+      config: App-Store
+  Debug:
+    build:
+      targets:
+        GreenScreen: all
+    run:
+      config: Debug
